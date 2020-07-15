@@ -15,9 +15,9 @@ class User(db.Model):
 
     first_name = db.Column(db.String(25), nullable=False)
 
-    last_name = db.Column(db.String(25), nullable=False)
+    last_name = db.Column(db.String(25), default='')
 
-    image_url = db.Column(db.String, nullable=False, default='https://www.sackettwaconia.com/wp-content/uploads/default-profile.png')
+    image_url = db.Column(db.Text, nullable=False, default='https://www.sackettwaconia.com/wp-content/uploads/default-profile.png')
 
     def __repr__(self):
         """Show info about user"""

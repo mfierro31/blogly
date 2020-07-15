@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% block title %}Add user{% endblock %}
 {% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for msg in messages %}
+<div class="mt-5 alert alert-danger">{{msg}}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<h1>Create a new user</h1>
 <form class="mt-5" action="/users/new" method="POST">
   <div class="form-group">
     <label for="first">First Name</label>

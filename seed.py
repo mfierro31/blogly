@@ -13,7 +13,7 @@ User.query.delete()
 # Add pets
 mike = User(first_name='Mike', last_name='Fierro')
 josh = User(first_name='Josh', last_name='Brolin')
-gar = User(first_name='Garrmanaarnaar', last_name='Glooch', image_url='https://vignette.wikia.nocookie.net/rickandmorty/images/4/41/Garmanarnar.PNG/revision/latest/top-crop/width/360/height/450?cb=20160117000927')
+gar = User(first_name='Garrmanaarnaar', image_url='https://vignette.wikia.nocookie.net/rickandmorty/images/4/41/Garmanarnar.PNG/revision/latest/top-crop/width/360/height/450?cb=20160117000927')
 gaga = User(first_name='Lady', last_name='Gaga', image_url='https://i.insider.com/5c66ef2eeb3ce8278850c163?width=600&format=jpeg&auto=webp')
 
 # Add new objects to session, so they'll persist
