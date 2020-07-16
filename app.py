@@ -34,7 +34,7 @@ def show_add_user_form():
 
 @app.route('/users/new', methods=["POST"])
 def add_user():
-    """Adds new user if all required fields are met"""
+    """Adds new user if required field is met"""
     first = request.form['first']
     last = request.form['last']
     image = request.form['image']
@@ -79,7 +79,7 @@ def submit_changes(user_id):
         db.session.add(user)
 
     if no_last:
-        user.last_name = None
+        user.last_name = ''
         db.session.add(user)
 
     if image:
