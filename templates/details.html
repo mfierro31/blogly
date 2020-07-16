@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}{{user.first_name}} {{user.last_name}}{% endblock %}
+{% block title %}{{user.get_full_name()}}{% endblock %}
 {% block content %}
-<img src="{{user.image_url}}" alt="{{user.first_name}} {{user.last_name}}" class="d-inline">
+<img src="{{user.image_url}}" alt="{{user.get_full_name()}}" class="d-inline">
 <div class="d-inline">
-  <h1>{{user.first_name}} {{user.last_name}}</h1>
+  <h1>{{user.get_full_name()}}</h1>
   <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
   <form class="d-inline" action="/users/{{user.id}}/delete" method="POST">
     <button class="btn btn-danger">Delete</button>  

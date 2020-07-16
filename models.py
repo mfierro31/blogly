@@ -23,3 +23,6 @@ class User(db.Model):
         """Show info about user"""
         u = self
         return f"<User id={u.id}, first_name={u.first_name}, last_name={u.last_name}, image_url={u.image_url}>"
+
+    def get_full_name(self):
+        return f'{self.first_name} {self.last_name}'
