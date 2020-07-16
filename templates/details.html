@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}{{user.get_full_name()}}{% endblock %}
+{% block title %}{{user.full_name}}{% endblock %}
 {% block content %}
-<img src="{{user.image_url}}" alt="{{user.get_full_name()}}" class="d-inline">
+<img src="{{user.image_url}}" alt="{{user.full_name}}" class="d-inline mt-5">
 <div class="d-inline">
-  <h1>{{user.get_full_name()}}</h1>
+  <h1>{{user.full_name}}</h1>
   <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
   <form class="d-inline" action="/users/{{user.id}}/delete" method="POST">
     <button class="btn btn-danger">Delete</button>  
   </form>
   <a href="/users" class="btn btn-secondary">Home</a>
 </div>
+<div class="mb-5"></div>
 {% endblock %}

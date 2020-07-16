@@ -24,7 +24,7 @@ def direct_to_homepage():
 @app.route('/users')
 def show_users():
     """Lists all users in the db"""
-    users = User.query.all()
+    users = User.query.order_by(User.last_name, User.first_name).all()
     return render_template('index.html', users=users)
 
 @app.route('/users/new')
