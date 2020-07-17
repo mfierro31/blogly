@@ -1,7 +1,7 @@
 """Blogly application."""
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 
 app = Flask(__name__)
 
@@ -53,7 +53,8 @@ def add_user():
 @app.route('/users/<int:user_id>')
 def show_details(user_id):
     user = User.query.get_or_404(user_id)
-    return render_template('details.html', user=user)
+    posts = Post.query.filter_by(user_id=user_id).all()
+    return render_template('details.html', user=user, posts=posts)
 
 @app.route('/users/<int:user_id>/edit')
 def show_edit_form(user_id):
