@@ -21,6 +21,8 @@ def direct_to_homepage():
     """Redirects to real homepage"""
     return redirect('/users')
 
+# Routes for users
+
 @app.route('/users')
 def show_users():
     """Lists all users in the db"""
@@ -101,3 +103,63 @@ def delete_user(user_id):
     db.session.commit()
     
     return redirect('/users')
+
+# Routes for posts
+@app.route('/users/<int:user_id>/posts/new')
+def show_add_post_form(user_id):
+    user = User.query.get_or_404(user_id)
+    return render_template('post-form.html', user=user)
+
+@app.route('/users/<int:user_id>/posts/new', methods=["POST"])
+def submit_post(user_id):
+    if not request.form['title'] or not request.form['content']:
+        flash('Title and Content are required')
+        return redirect(f'/users/{user_id}/posts/new')
+    else:
+        new_post = Post(title=request.form['title'], content=request.form['content'], user_id=user_id)
+        db.session.add(new_post)
+        db.session.commit()
+
+        return redirect(f'/users/{user_id}')
+
+@app.route('/posts/<int:post_id>')
+def show_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('show-post.html', post=post)
+
+@app.route('/posts/<int:post_id>/edit')
+def show_edit_post_form(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('edit-post.html', post=post)
+
+@app.route('/posts/<int:post_id>/edit', methods=["POST"])
+def edit_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    title = request.form['title']
+    content = request.form['content']
+
+    if not title and not content:
+        flash('No changes have been made.  Please make a change to either Title or Post Content')
+        return redirect(f'/posts/{post_id}/edit')
+    else:
+        if title:
+            post.title = title
+            db.session.add(post)
+
+        if content:
+            post.content = content
+            db.session.add(post)
+
+        db.session.commit()
+
+        return redirect(f'/posts/{post_id}')
+
+@app.route('/posts/<int:post_id>/delete', methods=["POST"])
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    user_id = post.user.id
+    
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(f'/users/{user_id}')
