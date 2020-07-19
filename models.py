@@ -20,6 +20,8 @@ class User(db.Model):
 
     image_url = db.Column(db.Text, nullable=False, default='https://www.sackettwaconia.com/wp-content/uploads/default-profile.png')
 
+    posts = db.relationship('Post', backref='user', cascade="all, delete-orphan")
+
     def __repr__(self):
         """Show info about user"""
         u = self
@@ -42,7 +44,11 @@ class Post(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    user = db.relationship('User', backref='posts')
+    @property
+    def friendly_date(self):
+        """Return nicely-formatted date."""
+
+        return self.created_at.strftime("%a %b %-d  %Y, %-I:%M %p")
 
     def __repr__(self):
         """Show info about post"""
