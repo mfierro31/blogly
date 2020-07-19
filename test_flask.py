@@ -68,6 +68,31 @@ class UsersTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn('<h1>User 1</h1>', html)
 
+    def test_show_edit_user_form(self):
+        with app.test_client() as client:
+            resp = client.get(f'/users/{self.user_id}/edit')
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('<h1 class="mt-3">Edit User 1</h1>', html)
+
+    def test_edit_user(self):
+        with app.test_client() as client:
+            d = {"first": "Person", "last": "3", "image": "https://vignette.wikia.nocookie.net/rickandmorty/images/7/70/1490478881683.jpg/revision/latest?cb=20190129225851"}
+            resp = client.post(f'/users/{self.user_id}/edit', data=d, follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn(f'<li><a href="/users/{self.user_id}">Person 3</a></li>', html)
+
+    def test_delete_user(self):
+        with app.test_client() as client:
+            resp = client.post(f'/users/{self.user_id}/delete', follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotIn(f'<li><a href="/users/{self.user_id}">User 1</a></li>', html)
+
 class PostsTestCase(TestCase):
     """Testing all the functionality associated with posts"""
     def setUp(self):
