@@ -20,8 +20,9 @@ db.create_all()
 
 @app.route('/')
 def direct_to_homepage():
-    """Redirects to real homepage"""
-    return redirect('/users')
+    """Shows most recent posts"""
+    posts = Post.query.order_by(Post.created_at.desc()).limit(5).all()
+    return render_template('recent-posts.html', posts=posts)
 
 # Routes for users
 

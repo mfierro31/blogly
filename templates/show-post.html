@@ -5,7 +5,7 @@
 <p>{{post.content}}</p>
 <p><i>By {{post.user.full_name}}</i></p>
 <a href="/users/{{post.user.id}}" class="btn btn-outline-primary">Back to user profile</a>
-<a href="/users" class="btn btn-outline-info">Go home</a>
+<a href="/users" class="btn btn-outline-info">Back to users</a>
 <a href="/posts/{{post.id}}/edit" class="btn btn-primary">Edit</a>
 <form class="d-inline" action="/posts/{{post.id}}/delete" method="POST">
   <button class="btn btn-danger">Delete</button>
