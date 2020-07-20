@@ -102,11 +102,12 @@ def submit_changes(user_id):
 
 @app.route('/users/<int:user_id>/delete', methods=["POST"])
 def delete_user(user_id):
-    User.query.filter_by(id=user_id).delete()
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
     db.session.commit()
     
     return redirect('/users')
-
+    
 # Routes for posts
 
 @app.route('/users/<int:user_id>/posts/new')
