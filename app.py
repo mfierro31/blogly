@@ -1,7 +1,7 @@
 """Blogly application."""
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, PostTag, Tag
 
 app = Flask(__name__)
 
@@ -15,7 +15,6 @@ debug = DebugToolbarExtension(app)
 
 connect_db(app)
 
-# db.drop_all()
 db.create_all()
 
 @app.route('/')
@@ -168,3 +167,60 @@ def delete_post(post_id):
     db.session.commit()
 
     return redirect(f'/users/{user_id}')
+
+# Routes for tags
+@app.route('/tags')
+def show_all_tags():
+    tags = Tag.query.order_by(Tag.name).all()
+    return render_template('tags-list.html', tags=tags)
+
+@app.route('/tags/<int:tag_id>')
+def show_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template('show-tag.html', tag=tag)
+
+@app.route('/tags/new')
+def show_add_tag_form():
+    return render_template('add-tag.html')
+
+@app.route('/tags/new', methods=["POST"])
+def add_new_tag():
+    tag_name = request.form['name']
+
+    if not tag_name:
+        flash('Name field cannot be blank')
+        return redirect('/tags/new')
+    else:
+        new_tag = Tag(name=tag_name)
+        db.session.add(new_tag)
+        db.session.commit()
+
+        return redirect('/tags')
+
+@app.route('/tags/<int:tag_id>/edit')
+def show_edit_tag_form(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template('edit-tag.html', tag=tag)
+
+@app.route('/tags/<int:tag_id>/edit', methods=["POST"])
+def edit_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    new_tag_name = request.form['name']
+
+    if not new_tag_name:
+        flash('No changes made.  Make a change to tag name or click cancel')
+        return redirect(f'/tags/{tag_id}/edit')
+    else:
+        tag.name = new_tag_name
+        db.session.add(tag)
+        db.session.commit()
+
+        return redirect('/tags')
+
+@app.route('/tags/<int:tag_id>/delete', methods=["POST"])
+def delete_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    db.session.delete(tag)
+    db.session.commit()
+
+    return redirect('/tags')

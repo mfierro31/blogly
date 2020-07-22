@@ -1,6 +1,6 @@
 """Seed file to make sample data for users and posts db."""
 
-from models import User, Post, db
+from models import User, Post, Tag, PostTag, db
 from app import app
 
 # Create all tables
@@ -38,4 +38,56 @@ db.session.commit()
 
 # Commit--otherwise, this never gets saved!
 db.session.add_all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12])
+db.session.commit()
+
+# Add tags
+tag1 = Tag(name='Fun')                                                                                                                                                                              
+
+tag2 = Tag(name='Sad')                                                                                                                                                                            
+
+tag3 = Tag(name='Crazy')                                                                                                                                                                            
+
+tag4 = Tag(name='Funny')                                                                                                                                                                            
+
+tag5 = Tag(name='Music')                                                                                                                                                                            
+
+tag6 = Tag(name='Film/TV')
+
+db.session.add_all([tag1, tag2, tag3, tag4, tag5, tag6])                                                                                                                                            
+
+db.session.commit()
+
+# Add posts/tags relationships
+post_tag1 = PostTag(post_id=1, tag_id=1)                                                                                                                                                           
+
+post_tag2 = PostTag(post_id=1, tag_id=3)                                                                                                                                                           
+
+post_tag3 = PostTag(post_id=1, tag_id=4)
+
+post_tag4 = PostTag(post_id=2, tag_id=4)                                                                                                                                                           
+
+post_tag5 = PostTag(post_id=2, tag_id=5)                                                                                                                                                           
+
+post_tag6 = PostTag(post_id=3, tag_id=2)                                                                                                                                                           
+
+post_tag7 = PostTag(post_id=3, tag_id=5)                                                                                                                                                           
+
+post_tag8 = PostTag(post_id=4, tag_id=4)                                                                                                                                                           
+
+post_tag9 = PostTag(post_id=4, tag_id=6)                                                                                                                                                           
+
+post_tag10 = PostTag(post_id=4, tag_id=3)                                                                                                                                                          
+
+post_tag11 = PostTag(post_id=5, tag_id=4)                                                                                                                                                          
+
+post_tag12 = PostTag(post_id=5, tag_id=6)                                                                                                                                                          
+
+post_tag13 = PostTag(post_id=6, tag_id=2)                                                                                                                                                          
+
+post_tag14 = PostTag(post_id=6, tag_id=3)                                                                                                                                                          
+
+post_tag15 = PostTag(post_id=6, tag_id=6)
+
+db.session.add_all([post_tag1, post_tag2, post_tag3, post_tag4, post_tag5, post_tag6, post_tag7, post_tag8, post_tag9, post_tag10, post_tag11, post_tag12, post_tag13, post_tag14, post_tag15])                                                                                                                                              
+
 db.session.commit()

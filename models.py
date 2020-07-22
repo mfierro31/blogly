@@ -44,6 +44,10 @@ class Post(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    tags = db.relationship('Tag', secondary='posts_tags', backref='posts')
+
+    assignments = db.relationship('PostTag', backref='post', cascade="all, delete-orphan")
+
     @property
     def friendly_date(self):
         """Return nicely-formatted date."""
@@ -54,3 +58,17 @@ class Post(db.Model):
         """Show info about post"""
         p = self
         return f"<Post id={p.id}, title={p.title}, content={p.content}, created_at={p.created_at}, user_id={p.user_id}>"
+
+class PostTag(db.Model):
+    __tablename__ = 'posts_tags'
+
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, unique=True, nullable=False)
+
+    assignments = db.relationship('PostTag', backref='tag', cascade="all, delete-orphan")
