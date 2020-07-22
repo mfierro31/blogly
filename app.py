@@ -112,7 +112,8 @@ def delete_user(user_id):
 @app.route('/users/<int:user_id>/posts/new')
 def show_add_post_form(user_id):
     user = User.query.get_or_404(user_id)
-    return render_template('post-form.html', user=user)
+    tags = Tag.query.all()
+    return render_template('post-form.html', user=user, tags=tags)
 
 @app.route('/users/<int:user_id>/posts/new', methods=["POST"])
 def submit_post(user_id):
@@ -121,6 +122,12 @@ def submit_post(user_id):
         return redirect(f'/users/{user_id}/posts/new')
     else:
         new_post = Post(title=request.form['title'], content=request.form['content'], user_id=user_id)
+
+        for tag in request.form.getlist('tag'):
+            tag_obj = Tag.query.filter(Tag.name == tag).one_or_none()
+            tag_id = tag_obj.id
+            new_post.assignments.append(PostTag(tag_id=tag_id))
+
         db.session.add(new_post)
         db.session.commit()
 
@@ -134,13 +141,15 @@ def show_post(post_id):
 @app.route('/posts/<int:post_id>/edit')
 def show_edit_post_form(post_id):
     post = Post.query.get_or_404(post_id)
-    return render_template('edit-post.html', post=post)
+    tags = Tag.query.all()
+    return render_template('edit-post.html', post=post, tags=tags)
 
 @app.route('/posts/<int:post_id>/edit', methods=["POST"])
 def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
     title = request.form['title']
     content = request.form['content']
+    tags = request.form.getlist('tag')
 
     if not title and not content:
         flash('No changes have been made.  Please make a change to either Title or Post Content')
@@ -153,6 +162,13 @@ def edit_post(post_id):
         if content:
             post.content = content
             db.session.add(post)
+
+        if tags:
+            for tag in tags:
+                tag_obj = Tag.query.filter_by(name=tag).one_or_none()
+
+                if tag_obj not in post.tags:
+                    post.assignments.append(PostTag(tag_id=tag_obj.id))
 
         db.session.commit()
 

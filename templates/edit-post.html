@@ -26,5 +26,18 @@
     <a href="/posts/{{post.id}}" class="btn btn-outline-info">Cancel</a>
     <button type="submit" class="btn btn-success">Edit</button>
   </div>
+  <h3>Add/remove tags:</h3>
+  {% for tag in tags %}
+  <div class="form-check mb-3">
+    {% if tag in post.tags %}
+    <input class="form-check-input" type="checkbox" name="tag" value="{{tag.name}}" id="{{tag.name}}" checked>
+    {% else %}
+    <input class="form-check-input" type="checkbox" name="tag" value="{{tag.name}}" id="{{tag.name}}">   
+    {% endif %}
+    <label class="form-check-label" for="{{tag.name}}">
+      {{tag.name}}
+    </label>
+  </div>
+  {% endfor %}
 </form>
 {% endblock %}
