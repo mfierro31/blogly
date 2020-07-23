@@ -147,12 +147,14 @@ def show_edit_post_form(post_id):
 @app.route('/posts/<int:post_id>/edit', methods=["POST"])
 def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
+    post_tags = set([tag.name for tag in post.tags])
+
     title = request.form['title']
     content = request.form['content']
-    tags = request.form.getlist('tag')
+    tags = set(request.form.getlist('tag'))
 
-    if not title and not content:
-        flash('No changes have been made.  Please make a change to either Title or Post Content')
+    if not title and not content and not post_tags.difference(tags):
+        flash('No changes have been made.  Please make a change to either Title, Post Content, or Tags.')
         return redirect(f'/posts/{post_id}/edit')
     else:
         if title:
@@ -166,9 +168,8 @@ def edit_post(post_id):
         if tags:
             for tag in tags:
                 tag_obj = Tag.query.filter_by(name=tag).one_or_none()
-
-                if tag_obj not in post.tags:
-                    post.assignments.append(PostTag(tag_id=tag_obj.id))
+                post.assignments.append(PostTag(tag_id=tag_obj.id))
+                db.session.add(post)
 
         db.session.commit()
 
