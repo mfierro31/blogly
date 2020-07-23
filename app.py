@@ -153,7 +153,7 @@ def edit_post(post_id):
     content = request.form['content']
     tags = set(request.form.getlist('tag'))
 
-    if not title and not content and not post_tags.difference(tags):
+    if not title and not content and post_tags.difference(tags) == {}:
         flash('No changes have been made.  Please make a change to either Title, Post Content, or Tags.')
         return redirect(f'/posts/{post_id}/edit')
     else:
@@ -165,11 +165,8 @@ def edit_post(post_id):
             post.content = content
             db.session.add(post)
 
-        if tags:
-            for tag in tags:
-                tag_obj = Tag.query.filter_by(name=tag).one_or_none()
-                post.assignments.append(PostTag(tag_id=tag_obj.id))
-                db.session.add(post)
+        post.tags = Tag.query.filter(Tag.name.in_(tags)).all()
+        db.session.add(post)
 
         db.session.commit()
 
