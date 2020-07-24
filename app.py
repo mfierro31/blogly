@@ -147,30 +147,25 @@ def show_edit_post_form(post_id):
 @app.route('/posts/<int:post_id>/edit', methods=["POST"])
 def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
-    post_tags = set([tag.name for tag in post.tags])
 
     title = request.form['title']
     content = request.form['content']
-    tags = set(request.form.getlist('tag'))
+    tags = request.form.getlist('tag')
 
-    if not title and not content and post_tags.difference(tags) == {}:
-        flash('No changes have been made.  Please make a change to either Title, Post Content, or Tags.')
-        return redirect(f'/posts/{post_id}/edit')
-    else:
-        if title:
-            post.title = title
-            db.session.add(post)
-
-        if content:
-            post.content = content
-            db.session.add(post)
-
-        post.tags = Tag.query.filter(Tag.name.in_(tags)).all()
+    if title:
+        post.title = title
         db.session.add(post)
 
-        db.session.commit()
+    if content:
+        post.content = content
+        db.session.add(post)
 
-        return redirect(f'/posts/{post_id}')
+    post.tags = Tag.query.filter(Tag.name.in_(tags)).all()
+    db.session.add(post)
+
+    db.session.commit()
+
+    return redirect(f'/posts/{post_id}')
 
 @app.route('/posts/<int:post_id>/delete', methods=["POST"])
 def delete_post(post_id):
